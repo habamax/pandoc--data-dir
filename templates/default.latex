@@ -1,0 +1,182 @@
+\documentclass[a4paper,10pt,hidelinks]{$if(documentclass)$$documentclass$$else$article$endif$}
+
+\usepackage[top=30mm, left=20mm, right=20mm, bottom=25mm, headheight=35mm, $if(showframe)$showframe$endif$]{geometry}
+
+% fonts
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{Roboto}
+\setsansfont{Roboto Condensed}
+\newfontfamily{\cyrillicfonttt}{Roboto Mono}
+\setmonofont{Roboto Mono}
+\newcommand\quotefont{\fontspec[Colour=55555500]{Roboto}}
+
+% hyphenation
+\usepackage{polyglossia}
+\setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
+$for(polyglossia-otherlangs)$
+\setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
+$endfor$
+
+\usepackage{indentfirst} % indent first line of paragraph
+\usepackage{float}
+\usepackage{misccorr} % dot after section numbers
+\usepackage[onehalfspacing]{setspace}
+
+% regular and long tables with 1.5 vertical padding
+\usepackage{array}
+\usepackage{longtable}
+\renewcommand{\arraystretch}{1.5}
+
+% table cells
+\usepackage{makecell}
+\renewcommand\theadalign{cb}
+\renewcommand\theadfont{\bfseries}
+\renewcommand\theadgape{\Gape[4pt]}
+\renewcommand\cellgape{\Gape[4pt]}
+
+% correct quotes for different languages
+\usepackage{csquotes}
+
+% dates
+\usepackage[useregional]{datetime2}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancypagestyle{plain}{\pagestyle{fancy}}
+$if(logoleft)$
+	\lhead{\includegraphics[$if(logoleft-scale)$scale=$logoleft-scale$$else$scale=1$endif$]{~/Pictures/logo/$logoleft$}}
+$else$
+	\lhead{}
+$endif$
+\chead{}
+$if(logoright)$
+	\rhead{{\includegraphics[$if(logoright-scale)$scale=$logoright-scale$$else$scale=1$endif$]{~/Pictures/logo/$logoright$}}\vfill}
+$else$
+	\rhead{}
+$endif$
+\lfoot{} \cfoot{} \rfoot{\thepage}
+\renewcommand{\headrulewidth}{0.0pt}
+\renewcommand{\footrulewidth}{0.0pt}
+
+% almost the same pagestyle (without pagenumbers) for a title
+\fancypagestyle{title}{
+	\fancyhf{}
+	$if(logoleft)$
+		\lhead{\includegraphics[$if(logoleft-scale)$scale=$logoleft-scale$$else$scale=1$endif$]{~/Pictures/logo/$logoleft$}}
+	$else$
+		\lhead{}
+	$endif$
+	\chead{}
+	$if(logoright)$
+		\rhead{{\includegraphics[$if(logoright-scale)$scale=$logoright-scale$$else$scale=1$endif$]{~/Pictures/logo/$logoright$}}\vfill}
+	$else$
+		\rhead{}
+	$endif$
+}
+
+% Главы без глав + размеры шрифта для секций(заголовков)
+\usepackage{titlesec}
+\titleformat{\chapter}{\normalfont\LARGE\bfseries\sffamily}{\thechapter.}{1em}{}
+\titlespacing*{\chapter}{0pt}{-20pt}{2.3ex plus .2ex} 
+\titleformat*{\section}{\Large\bfseries\sffamily}
+\titleformat*{\subsection}{\large\bfseries\sffamily}
+\titleformat*{\subsubsection}{\normalsize\bfseries\sffamily}
+
+% highlight text
+\usepackage{soul}
+
+\usepackage[normalem]{ulem}
+\usepackage{amsmath, amssymb, textcomp, capt-of, attachfile}
+\usepackage{graphicx, grffile, color, wrapfig, rotating}
+
+% pdf attributes
+\usepackage{hyperref}
+\hypersetup{
+	pdfencoding=auto,
+	$if(title-meta)$
+		pdftitle={$title-meta$},
+	$endif$
+	$if(author-meta)$
+		pdfauthor={$author-meta$},
+	$endif$
+	$if(keywords)$
+		pdfkeywords={$for(keywords)$$keywords$$sep$; $endfor$},
+	$endif$
+	pdfcreator={pandoc}, 
+	pdflang={$polyglossia-lang.name$}
+}
+
+$if(title)$
+\title{$title$}
+$endif$
+$if(author)$
+\author{$author$}
+$endif$
+$if(date)$
+	\date{\DTMdate{$date$}}
+$else$
+	\date{\today}
+$endif$
+
+\usepackage{fancyvrb}
+\VerbatimFootnotes % allows verbatim text in footnotes
+
+\providecommand{\tightlist}{%
+\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+\begin{document}
+
+$for(include-before)$
+$include-before$
+$endfor$
+
+$if(titlepage)$
+\begin{titlepage}
+	\thispagestyle{title}
+	\centering
+	\vspace*{7cm}
+	{\scshape\Huge $title$\par}
+	$if(subtitle)$
+	\vspace*{2cm}
+	{\scshape\LARGE $subtitle$\par}
+	$endif$
+	\vfill
+	$if(author)$
+	{\scshape\normalsize $author$\par}
+	$endif$
+	$if(date)$
+	{\scshape\normalsize \DTMdate{$date$}\par}
+	$else$
+	{\scshape\normalsize \today\par}
+	$endif$
+\end{titlepage}
+$else$
+	$if(title)$
+		\maketitle
+	$endif$
+$endif$
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
+$if(toc)$
+{
+\tableofcontents
+}
+$endif$
+
+$body$
+
+$for(include-after)$
+$include-after$
+$endfor$
+
+\end{document}
